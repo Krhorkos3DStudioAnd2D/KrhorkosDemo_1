@@ -261,7 +261,7 @@
             margin-bottom: 10px;
         }
 
-        /* # SECCIÓN DE INFORMACIÓN (HORARIOS, UBICACIÓN Y CONTACTO) */
+        /* # SECCIÓN DE INFORMACIÓN Y MAPA */
         .info-section {
             max-width: 1200px;
             margin: 0 auto;
@@ -277,6 +277,9 @@
             border-radius: 16px;
             padding: 30px;
             transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .info-card:hover {
@@ -302,6 +305,65 @@
             color: var(--text-muted);
             line-height: 1.6;
             font-size: 1.05rem;
+        }
+
+        /* # CONTENEDOR DEL MAPA INTERACTIVO */
+        .map-container {
+            max-width: 1200px;
+            margin: 20px auto 40px auto;
+            padding: 0 20px;
+        }
+
+        .map-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .map-box:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.15);
+        }
+
+        .map-iframe-wrapper {
+            position: relative;
+            width: 100%;
+            height: 380px;
+        }
+
+        .map-iframe-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: 0;
+            filter: grayscale(20%) contrast(110%);
+        }
+
+        /* Botón flotante superior dentro del mapa para ampliar a pantalla grande */
+        .expand-map-btn {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary);
+            color: var(--bg-dark);
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .expand-map-btn:hover {
+            background: #fff;
+            transform: translateY(-2px);
         }
 
         /* # PIE DE PÁGINA */
@@ -417,6 +479,21 @@
             <p>Teléfono: [TELÉFONO]<br>Correo: [CORREO]<br>¡Agenda tu cita ahora mismo!</p>
         </div>
     </section>
+
+    <!-- # MAPA INTERACTIVO DEL LOCAL -->
+    <div class="map-container" id="ubicacion">
+        <div class="map-box">
+            <div class="map-iframe-wrapper">
+                <!-- Mapa de muestra (Aqui puedo reemplazar el enlace src de Google Maps por la ubicación real del cliente) -->
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3732.8887640123!2d-103.35!3d20.67!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjDCsDQwJzEyLjAiTiAxMDPCsDIxJzAwLjAiVw!5e0!3m2!1ses!2smx!4v1620000000000!5m2!1ses!2smx" allowfullscreen="" loading="lazy"></iframe>
+                
+                <!-- Botón para expandir el mapa en pantalla grande y navegar -->
+                <a href="https://maps.google.com" target="_blank" class="expand-map-btn">
+                    <i class="fa-solid fa-expand"></i> Ampliar Mapa / Pantalla Grande
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- # PIE DE PÁGINA -->
     <footer>
