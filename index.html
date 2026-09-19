@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[NOMBRE_DEL_RESTAURANTE] | Menú y Reservaciones</title>
+    <title>[NOMBRE_DE_LA_PELUQUERÍA] | Estilo y Cuidado Personal</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
@@ -156,7 +156,72 @@
             color: var(--primary);
         }
 
-        /* # SECCIÓN DE INFORMACIÓN (HORARIOS Y UBICACIÓN) */
+        /* # SECCIÓN DE SERVICIOS */
+        .section-title {
+            text-align: center;
+            font-size: 2.3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .services-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .service-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 245, 212, 0.15);
+        }
+
+        .service-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .service-price {
+            font-size: 1.2rem;
+            font-weight: 900;
+            color: var(--accent);
+        }
+
+        /* # SECCIÓN DE INFORMACIÓN (HORARIOS, UBICACIÓN Y CONTACTO) */
         .info-section {
             max-width: 1200px;
             margin: 0 auto;
@@ -219,46 +284,78 @@
 
     <!-- # BARRA DE NAVEGACIÓN -->
     <header>
-        <a href="#" class="logo">[NOMBRE_DEL_RESTAURANTE]<span>.</span></a>
-        <a href="tel:[TELÉFONO]" class="nav-contacto"><i class="fa-solid fa-phone"></i> Llámanos</a>
+        <a href="#" class="logo">[NOMBRE_DE_LA_PELUQUERÍA]<span>.</span></a>
+        <a href="tel:[TELÉFONO]" class="nav-contacto"><i class="fa-solid fa-scissors"></i> Reservar Cita</a>
     </header>
 
     <!-- # SECCIÓN PRINCIPAL (HERO) -->
     <section class="hero-section">
         <div class="hero-content">
-            <h1>Disfruta de los mejores sabores en <span>[NOMBRE_DEL_RESTAURANTE]</span></h1>
-            <p>[DESCRIPCIÓN_CORTA]: Un espacio diseñado para consentir tu paladar con ingredientes frescos, recetas tradicionales y un ambiente inigualable.</p>
-            <a href="#contacto" class="btn-cta">Reservar una Mesa</a>
+            <h1>Renueva tu estilo en <span>[NOMBRE_DE_LA_PELUQUERÍA]</span></h1>
+            <p>[DESCRIPCIÓN_CORTA]: Expertos en cortes modernos, barbería clásica y tratamientos capilares diseñados para resaltar tu mejor versión.</p>
+            <a href="#servicios" class="btn-cta">Ver Servicios y Precios</a>
         </div>
         
         <div class="hero-image-container">
             <i class="fa-solid fa-image"></i>
             <span style="font-weight: 600; color: var(--text-main);">[IMAGEN_DE_MUESTRA]</span>
-            <span style="font-size: 0.85rem; margin-top: 5px;">(Reemplazar por foto del platillo principal o local)</span>
+            <span style="font-size: 0.85rem; margin-top: 5px;">(Reemplazar por foto del salón o corte estelar)</span>
         </div>
     </section>
 
-    <!-- # SECCIÓN DE HORARIOS Y UBICACIÓN -->
-    <section class="info-section" id="contacto">
+    <!-- # SECCIÓN DE SERVICIOS -->
+    <section class="services-section" id="servicios">
+        <h2 class="section-title">Nuestros Servicios</h2>
+        <p class="section-subtitle">Calidad y profesionalismo en cada detalle</p>
+
+        <div class="services-grid">
+            <div class="service-card">
+                <div>
+                    <h3>[SERVICIO_1]</h3>
+                    <p>[DESCRIPCIÓN_DEL_SERVICIO_1]: Corte de cabello personalizado adaptado a la forma de tu rostro y estilo preferido.</p>
+                </div>
+                <div class="service-price">[SERVICIO_PRECIO_1]</div>
+            </div>
+
+            <div class="service-card">
+                <div>
+                    <h3>[SERVICIO_2]</h3>
+                    <p>[DESCRIPCIÓN_DEL_SERVICIO_2]: Arreglo de barba con perfilado profesional, toalla caliente y productos hidratantes.</p>
+                </div>
+                <div class="service-price">[SERVICIO_PRECIO_2]</div>
+            </div>
+
+            <div class="service-card">
+                <div>
+                    <h3>[SERVICIO_3]</h3>
+                    <p>[DESCRIPCIÓN_DEL_SERVICIO_3]: Tinte, rayitos o tratamientos capilares avanzados para cuidar y dar brillo a tu cabello.</p>
+                </div>
+                <div class="service-price">[SERVICIO_PRECIO_3]</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- # SECCIÓN DE HORARIOS, UBICACIÓN Y CONTACTO -->
+    <section class="info-section">
         <div class="info-card">
             <h3><i class="fa-regular fa-clock"></i> Horarios</h3>
-            <p>[HORARIOS]<br>Lunes a Domingo: 12:00 PM – 10:00 PM<br>(Sujeto a cambios en días festivos)</p>
+            <p>[HORARIOS]<br>Lunes a Sábado: 10:00 AM – 08:00 PM<br>Domingos: Cerrado</p>
         </div>
 
         <div class="info-card">
             <h3><i class="fa-solid fa-location-dot"></i> Ubicación</h3>
-            <p>[DIRECCIÓN]<br>Av. Principal #123, Colonia Centro<br>Ciudad de México, C.P. 00000</p>
+            <p>[DIRECCIÓN]<br>Calle Principal #456, Local B<br>Ciudad, C.P. 00000</p>
         </div>
 
         <div class="info-card">
-            <h3><i class="fa-solid id-card fa-address-book"></i> Contacto</h3>
-            <p>Teléfono: [TELÉFONO]<br>Correo: contacto@[NOMBRE_DEL_RESTAURANTE].com<br>¡Síguenos en redes sociales!</p>
+            <h3><i class="fa-solid fa-address-book"></i> Contacto</h3>
+            <p>Teléfono: [TELÉFONO]<br>Correo: [CORREO]<br>¡Agenda tu cita por llamada o mensaje!</p>
         </div>
     </section>
 
     <!-- # PIE DE PÁGINA -->
     <footer>
-        <p>&copy; 2026 [NOMBRE_DEL_RESTAURANTE]. Todos los derechos reservados. Desarrollado como sitio de demostración.</p>
+        <p>&copy; 2026 [NOMBRE_DE_LA_PELUQUERÍA]. Todos los derechos reservados. Desarrollado como sitio de demostración.</p>
     </footer>
 
 </body>
