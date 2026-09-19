@@ -1,1472 +1,265 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KrhorkosImageEditor PRO+</title>
+    <title>[NOMBRE_DEL_RESTAURANTE] | Menú y Reservaciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        /* --- TEMA Y VARIABLES --- */
-        :root[data-theme="dark"] {
-            --bg-main: #0f1117;
-            --bg-panel: #181b22;
-            --bg-secondary: #21262d;
-            --border-color: #30363d;
-            --text-main: #f0f6fc;
-            --text-muted: #8b949e;
-            --accent: #238636;
-            --accent-hover: #2ea043;
-            --primary-brand: #7928ca;
-            --danger: #da3633;
-        }
-
-        :root[data-theme="light"] {
-            --bg-main: #f0f2f5;
-            --bg-panel: #ffffff;
-            --bg-secondary: #e4e6eb;
-            --border-color: #ccd0d5;
-            --text-main: #050505;
-            --text-muted: #65676b;
-            --accent: #1b74e4;
-            --accent-hover: #1558b0;
-            --primary-brand: #6200ee;
-            --danger: #b00020;
-        }
-
-        :root[data-theme="cyberpunk"] {
-            --bg-main: #05050a;
-            --bg-panel: #0f0e17;
-            --bg-secondary: #1f1b2e;
-            --border-color: #ff007f;
-            --text-main: #00ffff;
-            --text-muted: #a7a9be;
-            --accent: #ff007f;
-            --accent-hover: #ff3399;
-            --primary-brand: #7928ca;
-            --danger: #ff4500;
+        /* # VARIABLES DE ESTILO (ESTÉTICA MODAL / OSCURA) */
+        :root {
+            --bg-dark: #0f0f0f;
+            --bg-card: #1a1a1a;
+            --primary: #7b2ffd;
+            --primary-hover: #9353ff;
+            --accent: #00f5d4;
+            --text-main: #f8f9fa;
+            --text-muted: #a0a5b1;
+            --border-color: #2a2c3d;
+            --banner-bg: #ffaa00;
+            --banner-text: #000000;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            user-select: none;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-main);
+            background-color: var(--bg-dark);
             color: var(--text-main);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            transition: background 0.3s, color 0.3s;
+            overflow-x: hidden;
         }
 
-        /* --- PANTALLA DE BIENVENIDA MODERNA Y REDES SOCIALES ABAJO A LA IZQUIERDA --- */
-        #welcomeScreen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, var(--bg-secondary) 0%, var(--bg-main) 100%);
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.4s ease;
-        }
-
-        .welcome-card {
-            background: rgba(24, 27, 34, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid var(--border-color);
-            padding: 50px;
-            border-radius: 16px;
+        /* # AVISO VISIBLE DE DEMOSTRACIÓN */
+        .demo-banner {
+            background-color: var(--banner-bg);
+            color: var(--banner-text);
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
-            max-width: 550px;
-            width: 90%;
-        }
-
-        .welcome-card h1 {
-            font-size: 2.2rem;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, var(--primary-brand), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 800;
-        }
-
-        .welcome-card p {
-            color: var(--text-muted);
-            margin-bottom: 30px;
+            padding: 12px 20px;
+            font-weight: 700;
             font-size: 0.95rem;
-            line-height: 1.5;
+            letter-spacing: 0.5px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
 
-        /* Enlaces de redes sociales en la parte inferior izquierda de la bienvenida */
-        .welcome-socials {
-            position: absolute;
-            bottom: 25px; left: 25px;
+        /* # ENCABEZADO Y NAVEGACIÓN */
+        header {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 25px 20px;
             display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            z-index: 2005;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .social-badge {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 900;
             color: var(--text-main);
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 0.78rem;
-            font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        .social-badge:hover {
-            background: var(--accent);
-            border-color: var(--accent);
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-contacto {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
             color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .nav-contacto:hover {
+            box-shadow: 0 4px 15px rgba(123, 47, 253, 0.4);
             transform: translateY(-2px);
         }
 
-        /* --- MENÚ LATERAL ESTILO GODOT --- */
-        #godotSidebar {
-            position: fixed;
-            top: 0; left: -320px; width: 320px; height: 100%;
-            background: var(--bg-panel);
-            border-right: 1px solid var(--border-color);
-            z-index: 1500;
-            display: flex;
-            flex-direction: column;
-            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
-        }
-
-        #godotSidebar.open { left: 0; }
-
-        .godot-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .godot-body {
-            padding: 15px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .godot-section-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin: 15px 0 8px 0;
-            letter-spacing: 0.8px;
-            font-weight: 700;
-        }
-
-        .godot-item {
-            padding: 10px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
-            margin-bottom: 8px;
-            font-size: 0.82rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .godot-item:hover { background: var(--border-color); }
-
-        /* --- HEADER / NAVEGACIÓN --- */
-        header {
-            height: 60px;
-            background-color: var(--bg-panel);
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            z-index: 10;
-        }
-
-        .brand {
-            font-size: 1.2rem;
-            font-weight: 800;
-            background: linear-gradient(45deg, var(--primary-brand), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            cursor: pointer;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-
-        .btn {
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            padding: 7px 14px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.1s;
-            font-size: 0.8rem;
-        }
-
-        .btn:hover { background-color: var(--accent-hover); }
-        .btn:active { transform: scale(0.97); }
-        .btn-danger { background-color: var(--danger); }
-        .btn-danger:hover { background-color: #b32a28; }
-        .btn-secondary { background-color: var(--bg-secondary); color: var(--text-main); border: 1px solid var(--border-color); }
-        .btn-secondary:hover { background-color: var(--border-color); }
-
-        /* --- CONTENEDOR PRINCIPAL --- */
-        .main-layout {
-            display: flex;
-            flex: 1;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* --- BARRA LATERAL (HERRAMIENTAS Y CAPAS) --- */
-        sidebar {
-            width: 310px;
-            background-color: var(--bg-panel);
-            border-right: 1px solid var(--border-color);
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-            z-index: 5;
-        }
-
-        .sidebar-section {
-            padding: 14px;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .sidebar-section h3 {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
-
-        .control-group {
-            margin-bottom: 10px;
-        }
-
-        .control-group label {
-            display: block;
-            font-size: 0.78rem;
-            margin-bottom: 4px;
-            color: var(--text-main);
-        }
-
-        .control-group select, .control-group input[type="text"], .control-group input[type="number"], .control-group input[type="color"] {
-            width: 100%;
-            padding: 7px;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            border-radius: 4px;
-            font-size: 0.82rem;
-        }
-
-        .control-group input[type="color"] {
-            height: 36px;
-            padding: 2px;
-            cursor: pointer;
-        }
-
-        .grid-buttons {
+        /* # SECCIÓN HERO (BIENVENIDA) */
+        .hero-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 6px;
-        }
-
-        /* Barra de formas de escena con renombrado */
-        .scene-shapes-list {
-            max-height: 140px;
-            overflow-y: auto;
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            padding: 4px;
-        }
-
-        .scene-shape-item {
-            padding: 6px 8px;
-            font-size: 0.78rem;
-            display: flex;
-            justify-content: space-between;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
             align-items: center;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            border-radius: 3px;
-            margin-bottom: 3px;
-            cursor: pointer;
         }
 
-        .scene-shape-item.active {
-            border-color: var(--accent);
-            background: rgba(35, 134, 54, 0.15);
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 20px;
         }
 
-        .scene-shape-item input {
-            background: transparent;
-            border: none;
-            color: var(--text-main);
-            font-size: 0.78rem;
-            width: 120px;
-            outline: none;
+        .hero-content h1 span {
+            color: var(--accent);
         }
 
-        /* --- VIEWPORT CENTRAL --- */
-        .workspace {
-            flex: 1;
-            background-color: var(--bg-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: auto;
-            position: relative;
-            padding: 30px;
-        }
-
-        .viewport-wrapper {
-            position: relative;
-            resize: both;
-            overflow: hidden;
-            min-width: 300px;
-            min-height: 200px;
-            max-width: 1400px;
-            max-height: 900px;
-            width: 800px;
-            height: 550px;
-            background-color: #ffffff;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 2px dashed var(--border-color);
-        }
-
-        .viewport-wrapper.checkerboard {
-            background-image: 
-                linear-gradient(45deg, #ccc 25%, transparent 25%), 
-                linear-gradient(-45deg, #ccc 25%, transparent 25%), 
-                linear-gradient(45deg, transparent 75%, #ccc 75%), 
-                linear-gradient(-45deg, transparent 75%, #ccc 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-        }
-
-        canvas {
-            display: block;
-            width: 100%;
-            height: 100%;
-            cursor: crosshair;
-        }
-
-        /* --- ATAJOS RÁPIDOS INFERIORES EN CAPA 1 --- */
-        .quick-shortcuts-bar {
-            position: absolute;
-            bottom: 10px; left: 10px;
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.72rem;
+        .hero-content p {
             color: var(--text-muted);
-            z-index: 4;
-            display: flex;
-            gap: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            font-size: 1.15rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
         }
 
-        .quick-shortcuts-bar span { color: var(--text-main); font-weight: 600; }
-
-        /* --- VENTANAS FLOTANTES Y MODALES --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 2500;
-            backdrop-filter: blur(3px);
-        }
-
-        .modal-card {
-            background: var(--bg-panel);
-            border: 1px solid var(--border-color);
-            width: 480px;
-            max-width: 90%;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
-            position: relative;
-            animation: modalPop 0.25s ease-out;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-
-        @keyframes modalPop {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 15px; right: 15px;
-            background: none; border: none;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            cursor: pointer;
-        }
-
-        .shortcut-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-top: 15px;
-        }
-
-        .shortcut-btn-card {
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 10px;
-            border-radius: 6px;
-            text-align: left;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.8rem;
-        }
-
-        .shortcut-btn-card:hover {
+        .btn-cta {
+            display: inline-block;
             background: var(--accent);
-            border-color: var(--accent);
-            color: white;
+            color: var(--bg-dark);
+            padding: 14px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.1rem;
+            transition: var(--transition);
         }
 
-        .shortcut-btn-card strong { display: block; margin-bottom: 3px; font-size: 0.85rem; }
+        .btn-cta:hover {
+            background: #fff;
+            box-shadow: 0 0 20px rgba(0, 245, 212, 0.4);
+            transform: translateY(-2px);
+        }
 
-        /* Notificación Toast */
-        .toast {
-            position: fixed;
-            bottom: 20px; left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--bg-panel);
+        .hero-image-container {
+            width: 100%;
+            height: 350px;
+            background: var(--bg-card);
+            border: 2px dashed var(--border-color);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-muted);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .hero-image-container i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        /* # SECCIÓN DE INFORMACIÓN (HORARIOS Y UBICACIÓN) */
+        .info-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .info-card {
+            background: var(--bg-card);
             border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 10px 20px;
-            border-radius: 6px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            transition: transform 0.3s ease;
-            z-index: 3000;
-            font-size: 0.85rem;
+            border-radius: 16px;
+            padding: 30px;
+            transition: var(--transition);
         }
-        .toast.show { transform: translateX(-50%) translateY(0); }
+
+        .info-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 8px 25px rgba(123, 47, 253, 0.15);
+        }
+
+        .info-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+        }
+
+        .info-card h3 i {
+            color: var(--accent);
+        }
+
+        .info-card p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        /* # PIE DE PÁGINA */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            margin-top: 60px;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
 
-    <!-- PANTALLA DE BIENVENIDA MODERNA -->
-    <div id="welcomeScreen">
-        <div class="welcome-card">
-            <h1>KrhorkosImageEditor </h1>
-            <p>Herramienta definitiva de dibujo vectorial, deformación por vértices, animación 2D y hojas de sprites.</p>
-            <button class="btn" style="width: 100%; padding: 12px; font-size: 1rem;" onclick="enterApp()">🚀 Ingresar al Editor</button>
-        </div>
-        <!-- Enlaces de redes sociales abajo a la izquierda -->
-        <div class="welcome-socials">
-            <a href="https://www.instagram.com/krhorkos3dstudioand2d/" target="_blank" class="social-badge">📸 Instagram</a>
-            <a href="https://x.com/krhorkos3DAnd2D" target="_blank" class="social-badge">✖️ X (Twitter)</a>
-            <a href="https://www.youtube.com/@Krhorkos3DStudioAnd2D-b6g" target="_blank" class="social-badge">▶️ YouTube</a>
-            <a href="https://alex293517.itch.io/" target="_blank" class="social-badge">🎮 Itch.io</a>
-        </div>
+    <!-- ⚠️ AVISO VISIBLE DE DEMOSTRACIÓN -->
+    <div class="demo-banner">
+        ⚠️ DEMOSTRACIÓN — Todos los datos son de ejemplo. Se reemplazarán por la información real al contratar el servicio.
     </div>
 
-    <!-- MENÚ LATERAL ESTILO GODOT -->
-    <div id="godotSidebar">
-        <div class="godot-header">
-            <span style="font-weight: 700; font-size: 0.95rem;">📂 Menú de Proyectos</span>
-            <button class="modal-close" style="position:static;" onclick="toggleGodotSidebar(false)">✕</button>
-        </div>
-        <div class="godot-body">
-            <div class="godot-section-title">Proyectos Recientes</div>
-            <div id="recentProjectsList"></div>
-
-            <div class="godot-section-title" style="margin-top: 20px;">🗑️ Papelera de Reciclaje</div>
-            <div id="trashProjectsList"></div>
-        </div>
-    </div>
-
-    <!-- BARRA SUPERIOR -->
+    <!-- # BARRA DE NAVEGACIÓN -->
     <header>
-        <div class="brand" onclick="toggleGodotSidebar(true)" title="Abrir Menú Godot">KrhorkosImageEditor ☰</div>
-        <div class="header-actions">
-            <button class="btn btn-secondary" onclick="toggleGodotSidebar(true)">📂 Proyectos / Papelera</button>
-            <button class="btn btn-secondary" onclick="toggleModal('animationModal', true)">🎬 Animaciones / Sprites (Ctrl+F1)</button>
-            <button class="btn btn-secondary" onclick="toggleModal('shortcutsModal', true)">⌨️ Atajos (Ctrl+B)</button>
-            <button class="btn btn-secondary" onclick="toggleModal('settingsModal', true)">⚙️ Ajustes</button>
-            <button class="btn" id="downloadBtn">📥 Descargar</button>
-        </div>
+        <a href="#" class="logo">[NOMBRE_DEL_RESTAURANTE]<span>.</span></a>
+        <a href="tel:[TELÉFONO]" class="nav-contacto"><i class="fa-solid fa-phone"></i> Llámanos</a>
     </header>
 
-    <!-- LAYOUT PRINCIPAL -->
-    <div class="main-layout">
-        <!-- BARRA LATERAL DE HERRAMIENTAS Y CAPAS -->
-        <sidebar>
-            <!-- 1. Lista de Formas y Nombres -->
-            <div class="sidebar-section">
-                <h3>Formas y Objetos en Escena</h3>
-                <div class="control-group">
-                    <label>Renombrar y Seleccionar:</label>
-                    <div class="scene-shapes-list" id="sceneShapesList"></div>
-                </div>
-                <div class="grid-buttons" style="margin-top: 8px;">
-                    <button class="btn btn-secondary" onclick="changeSelectedColor()">🎨 Color</button>
-                    <button class="btn btn-secondary" onclick="changeSelectedOpacity()">👁️ Opacidad</button>
-                </div>
-                <input type="color" id="activeColorPicker" value="#7928ca" style="display:none;" onchange="applyColorToSelected(this.value)">
-                <button class="btn btn-danger" style="width: 100%; margin-top: 8px;" onclick="deleteSelected()">🗑️ Borrar Seleccionado</button>
-            </div>
-
-            <!-- 2. Creación de Formas, Terrenos y Trazos -->
-            <div class="sidebar-section">
-                <h3>Herramientas de Dibujo</h3>
-                <div class="grid-buttons">
-                    <button class="btn btn-secondary" onclick="addShape('rect')">Cuadrado</button>
-                    <button class="btn btn-secondary" onclick="addShape('rectangle')">Rectángulo</button>
-                    <button class="btn btn-secondary" onclick="addShape('circle')">Círculo</button>
-                    <button class="btn btn-secondary" onclick="addShape('triangle')">Triángulo</button>
-                </div>
-                <div class="control-group" style="margin-top: 8px;">
-                    <label>Forma Aleatoria (Terreno/Continente): <span id="roughnessVal">50</span>%</label>
-                    <input type="range" id="roughnessSlider" min="10" max="90" value="50" style="width:100%;" oninput="document.getElementById('roughnessVal').innerText=this.value">
-                    <button class="btn btn-secondary" style="width: 100%; margin-top: 4px;" onclick="addRandomTerrain()">⛰️ Generar Forma Aleatoria</button>
-                </div>
-                <div class="shortcut-hint" style="font-size: 0.72rem; color: var(--text-muted); margin-top: 6px;">
-                    • <b>Tecla 1</b>: Incrementar puntos de edición.<br>
-                    • <b>Tecla TAB</b>: Activar/desactivar Modo Edición.<br>
-                    • <b>Tecla 2</b>: Modo Dibujo (trazo continuo con ratón/dedo).<br>
-                    • <b>Tecla 3</b>: Herramienta Curvas.
-                </div>
-            </div>
-
-            <!-- 3. Herramientas Avanzadas y Rellenos (Sin Puntos de Referencia) -->
-            <div class="sidebar-section">
-                <h3>Rellenos y Geometría</h3>
-                <div class="grid-buttons">
-                    <button class="btn btn-secondary" onclick="activateTool('fillHole')" id="btnFillHole">🪣 Rellenar Huecos</button>
-                    <button class="btn btn-secondary" onclick="autoFillAllShapes()">⚡ Relleno Auto</button>
-                </div>
-                <div class="control-group" style="margin-top: 10px;">
-                    <label>Importar Imagen:</label>
-                    <input type="file" id="imageLoader" accept="image/*" style="font-size: 0.78rem; color: var(--text-muted);">
-                </div>
-            </div>
-        </sidebar>
-
-        <!-- VIEWPORT CENTRAL -->
-        <div class="workspace">
-            <div class="viewport-wrapper" id="viewportWrapper">
-                <canvas id="mainCanvas" width="800" height="550"></canvas>
-            </div>
-            <!-- ATAJOS RÁPIDOS VISIBLES EN CAPA 1 -->
-            <div class="quick-shortcuts-bar">
-                <div><span>Tab:</span> Modo Ed</div>
-                <div><span>1:</span> Puntos+</div>
-                <div><span>2:</span> Dibujo Táctil</div>
-                <div><span>3:</span> Curvas</div>
-                <div><span>Ctrl+J:</span> Fusionar</div>
-                <div><span>Ctrl+S:</span> Guardar</div>
-            </div>
+    <!-- # SECCIÓN PRINCIPAL (HERO) -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Disfruta de los mejores sabores en <span>[NOMBRE_DEL_RESTAURANTE]</span></h1>
+            <p>[DESCRIPCIÓN_CORTA]: Un espacio diseñado para consentir tu paladar con ingredientes frescos, recetas tradicionales y un ambiente inigualable.</p>
+            <a href="#contacto" class="btn-cta">Reservar una Mesa</a>
         </div>
-    </div>
-
-    <!-- MODAL DE ATAJOS (Ctrl + B) -->
-    <div class="modal-overlay" id="shortcutsModal">
-        <div class="modal-card">
-            <button class="modal-close" onclick="toggleModal('shortcutsModal', false)">✕</button>
-            <h2>Atajos del Sistema</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem;">Pasa el cursor o pulsa sobre los botones de atajo para ver su función detallada.</p>
-            <div class="shortcut-grid">
-                <div class="shortcut-btn-card" title="Activa el modo de edición de vértices en la figura seleccionada.">
-                    <strong>Tecla TAB</strong> Activar Modo Edición
-                </div>
-                <div class="shortcut-btn-card" title="Incrementa los puntos de control y edición de la figura.">
-                    <strong>Tecla 1</strong> Incrementar Vértices
-                </div>
-                <div class="shortcut-btn-card" title="Activa el trazo continuo con ratón o toque directo.">
-                    <strong>Tecla 2</strong> Modo Dibujo / Táctil
-                </div>
-                <div class="shortcut-btn-card" title="Permite trazar curvas suaves mediante múltiples clics.">
-                    <strong>Tecla 3</strong> Herramienta Curvas
-                </div>
-                <div class="shortcut-btn-card" title="Fusiona dos o más formas seleccionadas en una sola entidad.">
-                    <strong>Ctrl + J</strong> Fusionar Formas
-                </div>
-                <div class="shortcut-btn-card" title="Separa una forma fusionada en sus partes originales independientes.">
-                    <strong>Ctrl + J + Menos</strong> Separar Formas
-                </div>
-                <div class="shortcut-btn-card" title="Guarda el proyecto actual en el almacenamiento local automáticamente.">
-                    <strong>Ctrl + S</strong> Guardar Proyecto
-                </div>
-                <div class="shortcut-btn-card" title="Abre el panel de animación 2D y generador de hojas de sprites.">
-                    <strong>Ctrl + F1</strong> Abrir Animaciones / Sprites
-                </div>
-            </div>
+        
+        <div class="hero-image-container">
+            <i class="fa-solid fa-image"></i>
+            <span style="font-weight: 600; color: var(--text-main);">[IMAGEN_DE_MUESTRA]</span>
+            <span style="font-size: 0.85rem; margin-top: 5px;">(Reemplazar por foto del platillo principal o local)</span>
         </div>
-    </div>
+    </section>
 
-    <!-- MODAL DE ANIMACIONES Y HOJA DE SPRITES (Ctrl + F1) -->
-    <div class="modal-overlay" id="animationModal">
-        <div class="modal-card">
-            <button class="modal-close" onclick="toggleModal('animationModal', false)">✕</button>
-            <h2>Animación 2D y Hoja de Sprites</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Gestiona tus fotogramas, previsualiza la animación o combínalos en una hoja de sprites.</p>
-            
-            <div id="animFramesContainer" style="max-height: 180px; overflow-y: auto; margin-bottom: 15px;">
-                <!-- Se inyecta dinámicamente, inicia con 1 espacio -->
-            </div>
-
-            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
-                <button class="btn btn-secondary" style="flex: 1;" onclick="addAnimationFrameSlot()">➕ Agregar fotograma</button>
-                <button class="btn" style="flex: 1;" onclick="toggleAnimationPlayback()" id="playAnimBtn">▶ Reproducir</button>
-            </div>
-
-            <div class="control-group" style="border-top: 1px solid var(--border-color); padding-top: 15px;">
-                <label>Espaciado entre fotogramas para la hoja de sprites (Píxeles):</label>
-                <input type="number" id="spriteSpacingInput" value="10" min="0" max="50">
-                <button class="btn btn-secondary" style="width: 100%; margin-top: 8px;" onclick="downloadSpriteSheet()">📦 Descargar hoja de sprites</button>
-            </div>
-
-            <div id="animPreviewContainer" style="margin-top: 15px; text-align: center; height: 140px; background: var(--bg-secondary); border-radius: 6px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
-                <span style="color: var(--text-muted); font-size: 0.8rem;">Previsualización de animación</span>
-            </div>
+    <!-- # SECCIÓN DE HORARIOS Y UBICACIÓN -->
+    <section class="info-section" id="contacto">
+        <div class="info-card">
+            <h3><i class="fa-regular fa-clock"></i> Horarios</h3>
+            <p>[HORARIOS]<br>Lunes a Domingo: 12:00 PM – 10:00 PM<br>(Sujeto a cambios en días festivos)</p>
         </div>
-    </div>
 
-    <!-- MODAL DE AJUSTES -->
-    <div class="modal-overlay" id="settingsModal">
-        <div class="modal-card">
-            <button class="modal-close" onclick="toggleModal('settingsModal', false)">✕</button>
-            <h2>Ajustes del Sitio</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 15px;">Tus preferencias se guardan y recuerdan automáticamente.</p>
-            
-            <div class="control-group">
-                <label>Apariencia Visual / Tema:</label>
-                <select id="themeSelector" onchange="changeTheme(this.value)">
-                    <option value="dark">Oscuro Profesional</option>
-                    <option value="light">Claro Estilo Canva</option>
-                    <option value="cyberpunk">Cyberpunk Neón</option>
-                </select>
-            </div>
-            <div class="control-group" style="margin-top: 10px;">
-                <label>Idioma del Sitio:</label>
-                <select id="langSelector" onchange="saveSettings()">
-                    <option value="es">Español</option>
-                    <option value="en">English</option>
-                </select>
-            </div>
-            <div class="control-group" style="margin-top: 10px;">
-                <button class="btn btn-secondary" style="width: 100%;" onclick="toggleCheckerboard()">🏁 Alternar Fondo Ajedrezado</button>
-            </div>
+        <div class="info-card">
+            <h3><i class="fa-solid fa-location-dot"></i> Ubicación</h3>
+            <p>[DIRECCIÓN]<br>Av. Principal #123, Colonia Centro<br>Ciudad de México, C.P. 00000</p>
         </div>
-    </div>
 
-    <!-- MODAL DE CONFIRMACIÓN DE ELIMINACIÓN DEFINITIVA -->
-    <div class="modal-overlay" id="confirmDeleteModal">
-        <div class="modal-card" style="width: 400px;">
-            <h2>⚠️ Eliminar Definitivamente</h2>
-            <p style="color: var(--text-muted); font-size: 0.85rem; margin: 15px 0;">¿Estás seguro de que deseas eliminar este proyecto de forma permanente?</p>
-            <div style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">
-                <input type="checkbox" id="dontAskAgainCheck">
-                <label for="dontAskAgainCheck" style="font-size: 0.8rem; cursor:pointer;">No volver a preguntar en esta sesión</label>
-            </div>
-            <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                <button class="btn btn-secondary" onclick="closeConfirmModal(false)">Cancelar</button>
-                <button class="btn btn-danger" onclick="closeConfirmModal(true)">Eliminar Permanentemente</button>
-            </div>
+        <div class="info-card">
+            <h3><i class="fa-solid id-card fa-address-book"></i> Contacto</h3>
+            <p>Teléfono: [TELÉFONO]<br>Correo: contacto@[NOMBRE_DEL_RESTAURANTE].com<br>¡Síguenos en redes sociales!</p>
         </div>
-    </div>
+    </section>
 
-    <!-- NOTIFICACIÓN TOAST -->
-    <div class="toast" id="toastMsg">Notificación</div>
+    <!-- # PIE DE PÁGINA -->
+    <footer>
+        <p>&copy; 2026 [NOMBRE_DEL_RESTAURANTE]. Todos los derechos reservados. Desarrollado como sitio de demostración.</p>
+    </footer>
 
-    <!-- SCRIPT DE LA APLICACIÓN -->
-    <script>
-        // --- ESTADO GLOBAL Y CONFIGURACIÓN PERSISTENTE ---
-        let userSettings = JSON.parse(localStorage.getItem('krhorkos_settings')) || {
-            theme: 'dark',
-            lang: 'es',
-            checkerboard: false,
-            dontAskAgainDelete: false
-        };
-
-        let state = {
-            elements: [],
-            selectedIndex: null,
-            activeTool: null, // 'fillHole', 'draw', 'curve'
-            drawingPoints: [],
-            curvePoints: [],
-            vertexCountMultiplier: 4,
-            isEditingMode: false,
-            dragging: false,
-            draggingVertexIndex: null,
-            startX: 0,
-            startY: 0
-        };
-
-        let projectsRecent = JSON.parse(localStorage.getItem('krhorkos_recents')) || [
-            { id: 1, name: 'Proyecto Paisaje 3D', date: '2026-06-01' },
-            { id: 2, name: 'Modelo de Criatura 2D', date: '2026-06-03' }
-        ];
-
-        let projectsTrash = JSON.parse(localStorage.getItem('krhorkos_trash')) || [];
-        let pendingDeleteId = null;
-
-        // Sistema de fotogramas dinámicos (Empieza con 1)
-        let animFramesData = [null];
-        let animPlayback = { playing: false, interval: null };
-
-        const canvas = document.getElementById('mainCanvas');
-        const ctx = canvas.getContext('2d');
-
-        // Inicializar preferencias guardadas
-        document.documentElement.setAttribute('data-theme', userSettings.theme);
-        document.getElementById('themeSelector').value = userSettings.theme;
-        document.getElementById('langSelector').value = userSettings.lang;
-        if (userSettings.checkerboard) {
-            document.getElementById('viewportWrapper').classList.add('checkerboard');
-        }
-
-        function showToast(msg) {
-            const t = document.getElementById('toastMsg');
-            t.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
-
-        function saveSettings() {
-            userSettings.theme = document.getElementById('themeSelector').value;
-            userSettings.lang = document.getElementById('langSelector').value;
-            localStorage.setItem('krhorkos_settings', JSON.stringify(userSettings));
-            showToast('Ajustes guardados correctamente.');
-        }
-
-        function changeTheme(themeName) {
-            userSettings.theme = themeName;
-            document.documentElement.setAttribute('data-theme', themeName);
-            saveSettings();
-        }
-
-        function toggleCheckerboard() {
-            userSettings.checkerboard = !userSettings.checkerboard;
-            document.getElementById('viewportWrapper').classList.toggle('checkerboard', userSettings.checkerboard);
-            saveSettings();
-            showToast(userSettings.checkerboard ? 'Fondo ajedrezado activado (Transparencia)' : 'Fondo blanco activado');
-        }
-
-        // --- PANTALLA DE BIENVENIDA Y MENÚ GODOT ---
-        function enterApp() {
-            document.getElementById('welcomeScreen').style.opacity = '0';
-            setTimeout(() => {
-                document.getElementById('welcomeScreen').style.display = 'none';
-                updateGodotSidebarUI();
-                renderAnimFramesUI();
-            }, 400);
-        }
-
-        function toggleGodotSidebar(show) {
-            const sb = document.getElementById('godotSidebar');
-            if (show) {
-                sb.classList.add('open');
-                updateGodotSidebarUI();
-            } else {
-                sb.classList.remove('open');
-            }
-        }
-
-        function updateGodotSidebarUI() {
-            const recList = document.getElementById('recentProjectsList');
-            recList.innerHTML = '';
-            projectsRecent.forEach(p => {
-                let div = document.createElement('div');
-                div.className = 'godot-item';
-                div.innerHTML = `<span>📁 ${p.name}</span> <span style="cursor:pointer;" onclick="moveToTrash(${p.id}, event)">🗑️</span>`;
-                div.onclick = () => { showToast(`Cargando ${p.name}...`); toggleGodotSidebar(false); };
-                recList.appendChild(div);
-            });
-
-            const trashList = document.getElementById('trashProjectsList');
-            trashList.innerHTML = '';
-            projectsTrash.forEach(p => {
-                let div = document.createElement('div');
-                div.className = 'godot-item';
-                div.innerHTML = `<span>🗑️ ${p.name}</span> <span style="font-size:0.75rem; color:var(--danger); cursor:pointer;" onclick="promptDeleteForever(${p.id}, event)">Eliminar Definitivo</span>`;
-                trashList.appendChild(div);
-            });
-            localStorage.setItem('krhorkos_recents', JSON.stringify(projectsRecent));
-            localStorage.setItem('krhorkos_trash', JSON.stringify(projectsTrash));
-        }
-
-        function moveToTrash(id, event) {
-            event.stopPropagation();
-            let idx = projectsRecent.findIndex(p => p.id === id);
-            if (idx !== -1) {
-                let item = projectsRecent.splice(idx, 1)[0];
-                projectsTrash.push(item);
-                updateGodotSidebarUI();
-                showToast('Proyecto enviado a la papelera (Sin advertencia)');
-            }
-        }
-
-        function promptDeleteForever(id, event) {
-            event.stopPropagation();
-            pendingDeleteId = id;
-            if (userSettings.dontAskAgainDelete) {
-                executeDeleteForever(true);
-            } else {
-                document.getElementById('confirmDeleteModal').style.display = 'flex';
-            }
-        }
-
-        function closeConfirmModal(confirmed) {
-            const check = document.getElementById('dontAskAgainCheck').checked;
-            if (check) userSettings.dontAskAgainDelete = true;
-            document.getElementById('confirmDeleteModal').style.display = 'none';
-            if (confirmed && pendingDeleteId !== null) {
-                executeDeleteForever(false);
-            }
-            pendingDeleteId = null;
-        }
-
-        function executeDeleteForever(silent) {
-            projectsTrash = projectsTrash.filter(p => p.id !== pendingDeleteId);
-            updateGodotSidebarUI();
-            showToast(silent ? 'Eliminado permanentemente (Aviso silenciado)' : 'Proyecto eliminado definitivamente');
-        }
-
-        // --- GESTIÓN DE MODALES GENERALES ---
-        function toggleModal(modalId, show) {
-            document.getElementById(modalId).style.display = show ? 'flex' : 'none';
-        }
-
-        // --- ATAJOS DE TECLADO Y MODOS AVANZADOS ---
-        window.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-
-            // Tecla TAB: MODO EDICIÓN
-            if (e.key === 'Tab') {
-                e.preventDefault();
-                if (state.selectedIndex === null) {
-                    showToast('Selecciona una forma o imagen primero para editar.');
-                    return;
-                }
-                state.isEditingMode = !state.isEditingMode;
-                let el = state.elements[state.selectedIndex];
-                el.showVertices = state.isEditingMode;
-                if (el.showVertices && !el.customVertices) {
-                    initVerticesForElement(el);
-                }
-                redrawCanvas();
-                showToast(state.isEditingMode ? 'MODO EDICIÓN ACTIVADO' : 'Modo Edición desactivado');
-            }
-
-            // Tecla 1: Incrementar vértices
-            if (e.key === '1') {
-                state.vinylMultiplier = (state.vinylMultiplier || 4) + 2;
-                if (state.selectedIndex !== null) {
-                    let el = state.elements[state.selectedIndex];
-                    initVerticesForElement(el, state.vinylMultiplier);
-                    redrawCanvas();
-                }
-                showToast(`Puntos de edición incrementados (${state.vinylMultiplier} puntos)`);
-            }
-
-            // Tecla 2: Modo Dibujo continuo con ratón/táctil
-            if (e.key === '2') {
-                activateTool('draw');
-                showToast('MODO DIBUJO / TÁCTIL ACTIVADO: Arrastra el cursor o dedo libremente.');
-            }
-
-            // Tecla 3: Herramienta Curvas
-            if (e.key === '3') {
-                activateTool('curve');
-                showToast('HERRAMIENTA CURVAS ACTIVADA');
-            }
-
-            // Ctrl + J: Fusionar formas
-            if (e.ctrlKey && e.key.toLowerCase() === 'j') {
-                e.preventDefault();
-                if (e.shiftKey || e.key === '-') {
-                    splitMergedShapes();
-                } else {
-                    mergeSelectedShapes();
-                }
-            }
-
-            // Ctrl + B: Mostrar atajos
-            if (e.ctrlKey && e.key.toLowerCase() === 'b') {
-                e.preventDefault();
-                toggleModal('shortcutsModal', true);
-            }
-
-            // Ctrl + S: Guardar
-            if (e.ctrlKey && e.key.toLowerCase() === 's') {
-                e.preventDefault();
-                saveCurrentProject();
-            }
-
-            // Ctrl + F1: Animaciones y Sprites
-            if (e.ctrlKey && e.key === 'F1') {
-                e.preventDefault();
-                toggleModal('animationModal', true);
-            }
-        });
-
-        function activateTool(toolName) {
-            state.activeTool = state.activeTool === toolName ? null : toolName;
-            ['btnFillHole'].forEach(id => {
-                let btn = document.getElementById(id);
-                if(btn) btn.style.borderColor = 'var(--border-color)';
-            });
-            if (state.activeTool === 'fillHole') {
-                document.getElementById('btnFillHole').style.borderColor = 'var(--accent)';
-            }
-            showToast(state.activeTool ? `Herramienta activa: ${state.activeTool}` : 'Herramienta desactivada');
-        }
-
-        function initVerticesForElement(el, count = 4) {
-            let pts = [];
-            let w = el.width || 120, h = el.height || 120, x = el.x, y = el.y;
-            for (let i = 0; i < count; i++) {
-                let angle = (i / count) * Math.PI * 2;
-                pts.push({
-                    x: x + w/2 + Math.cos(angle) * (w/2),
-                    y: y + h/2 + Math.sin(angle) * (h/2)
-                });
-            }
-            el.customVertices = pts;
-        }
-
-        // --- BARRA DE FORMAS Y SELECCIÓN ---
-        function addShape(type) {
-            let newEl = {
-                id: Date.now(),
-                name: `Forma_${state.elements.length + 1}`,
-                type: type,
-                x: 120 + Math.random() * 40,
-                y: 120 + Math.random() * 40,
-                width: 120,
-                height: 120,
-                radius: 60,
-                color: '#7928ca',
-                opacity: 1.0,
-                showVertices: false,
-                customVertices: null
-            };
-            state.elements.push(newEl);
-            state.selectedIndex = state.elements.length - 1;
-            redrawCanvas();
-            updateSceneShapesUI();
-        }
-
-        function addRandomTerrain() {
-            let roughness = parseInt(document.getElementById('roughnessSlider').value);
-            let pts = [];
-            let cx = 250, cy = 250, count = 8 + Math.floor(roughness / 10);
-            for (let i = 0; i < count; i++) {
-                let angle = (i / count) * Math.PI * 2;
-                let r = 60 + Math.random() * (roughness * 1.2);
-                pts.push({ x: cx + Math.cos(angle) * r, y: cy + Math.sin(angle) * r });
-            }
-            let newEl = {
-                id: Date.now(),
-                name: `Terreno_${state.elements.length + 1}`,
-                type: 'terrain',
-                x: 150, y: 150,
-                color: '#238636',
-                opacity: 1.0,
-                showVertices: true,
-                customVertices: pts
-            };
-            state.elements.push(newEl);
-            state.selectedIndex = state.elements.length - 1;
-            redrawCanvas();
-            updateSceneShapesUI();
-            showToast('Forma irregular / terreno natural generada');
-        }
-
-        function updateSceneShapesUI() {
-            const list = document.getElementById('sceneShapesList');
-            list.innerHTML = '';
-            state.elements.forEach((el, idx) => {
-                let div = document.createElement('div');
-                div.className = `scene-shape-item ${idx === state.selectedIndex ? 'active' : ''}`;
-                div.innerHTML = `
-                    <input type="text" value="${el.name || el.type}" onchange="renameElement(${idx}, this.value)" onclick="event.stopPropagation()">
-                    <span style="font-size:0.7rem; color:var(--text-muted);">[${el.type}]</span>
-                `;
-                div.onclick = () => {
-                    state.selectedIndex = idx;
-                    redrawCanvas();
-                    updateSceneShapesUI();
-                };
-                list.appendChild(div);
-            });
-        }
-
-        function renameElement(idx, newName) {
-            state.elements[idx].name = newName;
-            showToast(`Renombrado a: ${newName}`);
-        }
-
-        function changeSelectedColor() {
-            if (state.selectedIndex === null) {
-                showToast('Selecciona una forma primero.');
-                return;
-            }
-            let picker = document.getElementById('activeColorPicker');
-            picker.value = state.elements[state.selectedIndex].color || '#7928ca';
-            picker.click();
-        }
-
-        function applyColorToSelected(colorHex) {
-            if (state.selectedIndex !== null) {
-                state.elements[state.selectedIndex].color = colorHex;
-                redrawCanvas();
-            }
-        }
-
-        function changeSelectedOpacity() {
-            if (state.selectedIndex === null) {
-                showToast('Selecciona una forma primero.');
-                return;
-            }
-            let el = state.elements[state.selectedIndex];
-            el.opacity = el.opacity === 1.0 ? 0.5 : (el.opacity === 0.5 ? 0.2 : 1.0);
-            redrawCanvas();
-            showToast(`Opacidad ajustada a: ${Math.round(el.opacity * 100)}%`);
-        }
-
-        function deleteSelected() {
-            if (state.selectedIndex === null) return;
-            state.elements.splice(state.selectedIndex, 1);
-            state.selectedIndex = state.elements.length > 0 ? 0 : null;
-            redrawCanvas();
-            updateSceneShapesUI();
-            showToast('Elemento eliminado');
-        }
-
-        // --- RELLENAR HUECOS CORREGIDO (RELLENA TODA LA FORMA DE PUNTA A PUNTA) ---
-        function fillCompleteShapeAt(mouseX, mouseY) {
-            let activeColor = document.getElementById('activeColorPicker').value;
-            let filledCount = 0;
-            state.elements.forEach(el => {
-                let hit = false;
-                let w = el.width || 120, h = el.height || 120;
-                if (el.type === 'circle' && Math.hypot(mouseX - (el.x + el.radius), mouseY - (el.y + el.radius)) <= el.radius) {
-                    hit = true;
-                } else if (mouseX >= el.x && mouseX <= el.x + w && mouseY >= el.y && mouseY <= el.y + h) {
-                    hit = true;
-                } else if (el.customVertices) {
-                    // Verificación simple por bounding box o polígono
-                    let minX = Math.min(...el.customVertices.map(v => v.x));
-                    let maxX = Math.max(...el.customVertices.map(v => v.x));
-                    let minY = Math.min(...el.customVertices.map(v => v.y));
-                    let maxY = Math.max(...el.customVertices.map(v => v.y));
-                    if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY) hit = true;
-                }
-
-                if (hit) {
-                    el.color = activeColor;
-                    filledCount++;
-                }
-            });
-            if (filledCount > 0) {
-                redrawCanvas();
-                showToast('¡Forma completa rellenada de punta a punta!');
-            }
-        }
-
-        function autoFillAllShapes() {
-            let activeColor = document.getElementById('activeColorPicker').value;
-            state.elements.forEach(el => { el.color = activeColor; });
-            redrawCanvas();
-            showToast('Relleno automático aplicado a todas las formas');
-        }
-
-        function mergeSelectedShapes() {
-            if (state.elements.length < 2) {
-                showToast('Se necesitan al menos 2 formas en la escena para fusionar.');
-                return;
-            }
-            let mergedVertices = [];
-            state.elements.forEach(el => {
-                if (el.customVertices) {
-                    mergedVertices = mergedVertices.concat(el.customVertices);
-                } else {
-                    mergedVertices.push({x: el.x, y: el.y}, {x: (el.x + (el.width||100)), y: el.y + (el.height||100)});
-                }
-            });
-            let mergedEl = {
-                id: Date.now(),
-                name: 'Forma_Fusionada',
-                type: 'merged',
-                x: 100, y: 100,
-                color: '#7928ca',
-                opacity: 1.0,
-                showVertices: true,
-                customVertices: mergedVertices,
-                originalElements: [...state.elements]
-            };
-            state.elements = [mergedEl];
-            state.selectedIndex = 0;
-            redrawCanvas();
-            updateSceneShapesUI();
-            showToast('Formas fusionadas con éxito (Ctrl+J)');
-        }
-
-        function splitMergedShapes() {
-            let cur = state.elements[state.selectedIndex];
-            if (cur && cur.originalElements) {
-                state.elements = cur.originalElements;
-                state.selectedIndex = 0;
-                redrawCanvas();
-                updateSceneShapesUI();
-                showToast('Forma separada en sus elementos originales');
-            } else {
-                showToast('La forma seleccionada no es una fusión separable.');
-            }
-        }
-
-        // --- MOTOR DE DIBUJO Y CANVAS ---
-        function redrawCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Dibujar trazos continuos o curvas libres
-            ctx.save();
-            ctx.strokeStyle = '#00ffff';
-            ctx.lineWidth = 2;
-            if (state.drawingPoints.length > 1) {
-                ctx.beginPath();
-                ctx.moveTo(state.drawingPoints[0].x, state.drawingPoints[0].y);
-                state.drawingPoints.forEach(p => ctx.lineTo(p.x, p.y));
-                ctx.stroke();
-            }
-            if (state.curvePoints.length > 1) {
-                ctx.beginPath();
-                ctx.moveTo(state.curvePoints[0].x, state.curvePoints[0].y);
-                for (let i = 1; i < state.curvePoints.length - 1; i++) {
-                    let xc = (state.curvePoints[i].x + state.curvePoints[i + 1].x) / 2;
-                    let yc = (state.curvePoints[i].y + state.curvePoints[i + 1].y) / 2;
-                    ctx.quadraticCurveTo(state.curvePoints[i].x, state.curvePoints[i].y, xc, yc);
-                }
-                ctx.stroke();
-            }
-            ctx.restore();
-
-            // Dibujar elementos de la escena
-            state.elements.forEach((el, index) => {
-                ctx.save();
-                ctx.globalAlpha = el.opacity !== undefined ? el.opacity : 1.0;
-
-                if (el.type === 'terrain' || el.type === 'merged' || (el.customVertices && el.showVertices)) {
-                    ctx.fillStyle = el.color;
-                    ctx.beginPath();
-                    let v = el.customVertices;
-                    ctx.moveTo(v[0].x, v[0].y);
-                    for (let i = 1; i < v.length; i++) ctx.lineTo(v[i].x, v[i].y);
-                    ctx.closePath();
-                    ctx.fill();
-                } else if (el.type === 'rect' || el.type === 'rectangle' || el.type === 'circle' || el.type === 'triangle') {
-                    ctx.fillStyle = el.color;
-                    ctx.beginPath();
-                    let w = el.width || 120, h = el.height || 120, x = el.x, y = el.y;
-                    if (el.type === 'circle') {
-                        ctx.arc(x + el.radius, y + el.radius, el.radius, 0, Math.PI * 2);
-                        ctx.fill();
-                    } else if (el.type === 'triangle') {
-                        ctx.moveTo(x + w/2, y); ctx.lineTo(x + w, y + h); ctx.lineTo(x, y + h); ctx.closePath(); ctx.fill();
-                    } else {
-                        ctx.fillRect(x, y, w, h);
-                    }
-                } else if (el.type === 'image' && el.imgObj) {
-                    ctx.drawImage(el.imgObj, el.x, el.y, el.width, el.height);
-                }
-                ctx.restore();
-
-                if (index === state.selectedIndex && el.showVertices && el.customVertices) {
-                    ctx.save();
-                    el.customVertices.forEach(v => {
-                        ctx.fillStyle = '#ff007f';
-                        ctx.fillRect(v.x - 5, v.y - 5, 10, 10);
-                        ctx.strokeStyle = '#ffffff';
-                        ctx.strokeRect(v.x - 5, v.y - 5, 10, 10);
-                    });
-                    ctx.restore();
-                }
-            });
-        }
-
-        // --- INTERACTIVIDAD RATÓN Y TÁCTIL (Mousedown, Drag, Touch) ---
-        canvas.addEventListener('mousedown', (e) => handleStart(e.clientX, e.clientY));
-        canvas.addEventListener('touchstart', (e) => {
-            if(e.touches.length > 0) handleStart(e.touches[0].clientX, e.touches[0].clientY);
-        });
-
-        function handleStart(clientX, clientY) {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = (clientX - rect.left) * (canvas.width / rect.width);
-            const mouseY = (clientY - rect.top) * (canvas.height / rect.height);
-
-            if (state.activeTool === 'fillHole') {
-                fillCompleteShapeAt(mouseX, mouseY);
-                return;
-            }
-            if (state.activeTool === 'curve') {
-                state.curvePoints.push({ x: mouseX, y: mouseY });
-                redrawCanvas();
-                return;
-            }
-            if (state.activeTool === 'draw') {
-                state.drawingPoints.push({ x: mouseX, y: mouseY });
-                state.dragging = true;
-                return;
-            }
-
-            // Comprobar vértices activos
-            if (state.selectedIndex !== null) {
-                let el = state.elements[state.selectedIndex];
-                if (el.showVertices && el.customVertices) {
-                    for (let vIdx = 0; vIdx < el.customVertices.length; vIdx++) {
-                        let v = el.customVertices[vIdx];
-                        if (Math.hypot(mouseX - v.x, mouseY - v.y) <= 12) {
-                            state.draggingVertexIndex = vIdx;
-                            state.dragging = true;
-                            return;
-                        }
-                    }
-                }
-            }
-
-            // Seleccionar y mover elementos
-            state.selectedIndex = null;
-            for (let i = state.elements.length - 1; i >= 0; i--) {
-                let el = state.elements[i];
-                let hit = false;
-                let w = el.width || 120, h = el.height || 120;
-                if (el.type === 'circle' && Math.hypot(mouseX - (el.x + el.radius), mouseY - (el.y + el.radius)) <= el.radius) hit = true;
-                else if (mouseX >= el.x && mouseX <= el.x + w && mouseY >= el.y && mouseY <= el.y + h) hit = true;
-
-                if (hit) {
-                    state.selectedIndex = i;
-                    state.dragging = true;
-                    state.startX = mouseX - el.x;
-                    state.startY = mouseY - el.y;
-                    break;
-                }
-            }
-            redrawCanvas();
-            updateSceneShapesUI();
-        }
-
-        window.addEventListener('mousemove', (e) => handleMove(e.clientX, e.clientY));
-        window.addEventListener('touchmove', (e) => {
-            if(e.touches.length > 0) handleMove(e.touches[0].clientX, e.touches[0].clientY);
-        });
-
-        function handleMove(clientX, clientY) {
-            if (!state.dragging) return;
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = (clientX - rect.left) * (canvas.width / rect.width);
-            const mouseY = (clientY - rect.top) * (canvas.height / rect.height);
-
-            // Si está activa la herramienta de dibujo, traza en tiempo real sin soltar
-            if (state.activeTool === 'draw') {
-                state.drawingPoints.push({ x: mouseX, y: mouseY });
-                redrawCanvas();
-                return;
-            }
-
-            if (state.selectedIndex === null) return;
-            let el = state.elements[state.selectedIndex];
-
-            if (state.draggingVertexIndex !== null && el.customVertices) {
-                el.customVertices[state.draggingVertexIndex].x = mouseX;
-                el.customVertices[state.draggingVertexIndex].y = mouseY;
-            } else {
-                let dx = mouseX - el.x - state.startX;
-                let dy = mouseY - el.y - state.startY;
-                el.x = mouseX - state.startX;
-                el.y = mouseY - state.startY;
-                if (el.customVertices) {
-                    el.customVertices.forEach(v => { v.x += dx; v.y += dy; });
-                }
-            }
-            redrawCanvas();
-        }
-
-        window.addEventListener('mouseup', () => { state.dragging = false; state.draggingVertexIndex = null; });
-        window.addEventListener('touchend', () => { state.dragging = false; state.draggingVertexIndex = null; });
-
-        // --- SISTEMA DE FOTOGRAMAS / ANIMACIÓN Y HOJA DE SPRITES ---
-        function renderAnimFramesUI() {
-            const container = document.getElementById('animFramesContainer');
-            container.innerHTML = '';
-            animFramesData.forEach((img, idx) => {
-                let div = document.createElement('div');
-                div.className = 'control-group';
-                div.style.marginBottom = '8px';
-                div.innerHTML = `
-                    <label>Fotograma ${idx + 1}:</label>
-                    <input type="file" accept="image/*" onchange="loadAnimFrameSlot(${idx}, event)">
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function addAnimationFrameSlot() {
-            animFramesData.push(null);
-            renderAnimFramesUI();
-            showToast('Nuevo espacio de fotograma añadido');
-        }
-
-        function loadAnimFrameSlot(idx, event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    animFramesData[idx] = img;
-                    showToast(`Fotograma ${idx + 1} cargado correctamente.`);
-                }
-                img.src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        }
-
-        function toggleAnimationPlayback() {
-            const container = document.getElementById('animPreviewContainer');
-            const btn = document.getElementById('playAnimBtn');
-            let validFrames = animFramesData.filter(img => img !== null);
-            if (validFrames.length === 0) {
-                showToast('Carga al menos un fotograma válido primero.');
-                return;
-            }
-
-            if (animPlayback.playing) {
-                clearInterval(animPlayback.interval);
-                animPlayback.playing = false;
-                btn.innerText = '▶ Reproducir';
-            } else {
-                animPlayback.playing = true;
-                btn.innerText = '⏹ Detener';
-                let curIdx = 0;
-                animPlayback.interval = setInterval(() => {
-                    container.innerHTML = '';
-                    let imgToDisplay = validFrames[curIdx % validFrames.length];
-                    let clone = imgToDisplay.cloneNode();
-                    clone.style.maxHeight = '120px';
-                    clone.style.maxWidth = '100%';
-                    container.appendChild(clone);
-                    curIdx++;
-                }, 400);
-            }
-        }
-
-        function downloadSpriteSheet() {
-            let validFrames = animFramesData.filter(img => img !== null);
-            if (validFrames.length === 0) {
-                showToast('No hay fotogramas cargados para crear la hoja de sprites.');
-                return;
-            }
-            let spacing = parseInt(document.getElementById('spriteSpacingInput').value) || 0;
-            
-            // Calcular dimensiones de la hoja de sprites horizontal
-            let totalWidth = validFrames.reduce((sum, img) => sum + img.width, 0) + (spacing * (validFrames.length - 1));
-            let maxHeight = Math.max(...validFrames.map(img => img.height));
-
-            let tempCanvas = document.createElement('canvas');
-            tempCanvas.width = totalWidth;
-            tempCanvas.height = maxHeight;
-            let tCtx = tempCanvas.getContext('2d');
-
-            let currentX = 0;
-            validFrames.forEach(img => {
-                tCtx.drawImage(img, currentX, 0);
-                currentX += img.width + spacing;
-            });
-
-            const link = document.createElement('a');
-            link.download = 'krhorkos-spritesheet.png';
-            link.href = tempCanvas.toDataURL('image/png');
-            link.click();
-            showToast('Hoja de sprites descargada con éxito');
-        }
-
-        function saveCurrentProject() {
-            localStorage.setItem('krhorkos_saved_proj', JSON.stringify(state.elements));
-            showToast('💾 Proyecto guardado exitosamente.');
-        }
-
-        // Cargar imagen local al editor principal
-        document.getElementById('imageLoader').addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = new Image();
-                img.onload = function() {
-                    let w = 200, h = (img.height * 200) / img.width;
-                    let newEl = {
-                        id: Date.now(),
-                        name: `Imagen_${state.elements.length + 1}`,
-                        type: 'image',
-                        imgObj: img,
-                        x: 100, y: 100,
-                        width: w, height: h,
-                        opacity: 1.0,
-                        showVertices: false,
-                        customVertices: null
-                    };
-                    state.elements.push(newEl);
-                    state.selectedIndex = state.elements.length - 1;
-                    redrawCanvas();
-                    updateSceneShapesUI();
-                    showToast('Imagen importada a la escena');
-                }
-                img.src = event.target.result;
-            }
-            reader.readAsDataURL(file);
-        });
-
-        document.getElementById('downloadBtn').addEventListener('click', () => {
-            const link = document.createElement('a');
-            link.download = 'krhorkos-pro-output.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            showToast('Imagen exportada correctamente');
-        });
-    </script>
 </body>
 </html>
